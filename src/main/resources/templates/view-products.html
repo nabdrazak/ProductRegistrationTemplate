@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="ISO-8859-1"/>
+    <title>View Products</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+            $(document).ready(function(){
+                $.getJSON("http://localhost:9009/products/", function(result){
+                    const tableBody = document.getElementById('myTableBody');
+                    for(const product in result) {
+                        const row = document.createElement('tr');
+                        const propIndexdCell = document.createElement('td');
+                        const propNameCell = document.createElement('td');
+                        const propValueCell = document.createElement('td');
+
+                        propIndexdCell.textContent = product;
+                        propNameCell.textContent = result[product].id;
+                        propValueCell.textContent = result[product].name;
+                        row.appendChild(propIndexdCell);
+                        row.appendChild(propNameCell);
+                        row.appendChild(propValueCell);
+
+                        tableBody.append(row);
+                    }
+                });
+            });
+        </script>
+</head>
+
+<body>
+    <div align="center">
+        <table style="width: 80%;" border="1px solid black">
+            <thead>
+                <tr>
+                    <th>Product Index</th>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody id="myTableBody"></tbody>
+        </table>
+    </div>
+    <a href="/home/save-product">Add Item</a>
+</body>
+</html>
