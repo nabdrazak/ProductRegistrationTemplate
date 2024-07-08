@@ -1,7 +1,11 @@
 package com.lautbiru.productRegistrationTemplate.controller;
 
-import com.lautbiru.productRegistrationTemplate.model.Product;
-import com.lautbiru.productRegistrationTemplate.wrapper.ProductWrapper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,13 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.lautbiru.productRegistrationTemplate.model.ErrorMessage;
+import com.lautbiru.productRegistrationTemplate.model.Product;
+import com.lautbiru.productRegistrationTemplate.wrapper.ProductWrapper;
 
 @Controller
 @RequestMapping("/home")
 public class WebController {
+
+    private static final Logger logger = LoggerFactory.getLogger(WebController.class);
 
     @Autowired
     RestTemplate restTemplate;
@@ -62,7 +68,18 @@ public class WebController {
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<ProductWrapper> entity = new HttpEntity<ProductWrapper>(productWrapper, headers);
 
-        restTemplate.exchange(URL_PREFIX, HttpMethod.POST, entity, String.class);
+        try {
+            restTemplate.exchange(URL_PREFIX, HttpMethod.POST, entity, String.class);
+        } catch (Exception ex) {
+            logger.info("Error Message Return --->  "+ex.getMessage());
+            ErrorMessage errorMessage = new ErrorMessage();
+            errorMessage.setErrorMessage(ex.getMessage());
+
+            model.addAttribute("errorMessage", errorMessage);
+            model.addAttribute("product", new Product());
+
+            return "add-item";
+        }
 
         return "view-products";
     }

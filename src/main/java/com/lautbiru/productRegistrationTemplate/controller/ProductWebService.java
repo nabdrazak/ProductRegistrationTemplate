@@ -1,8 +1,7 @@
 package com.lautbiru.productRegistrationTemplate.controller;
 
-import com.lautbiru.productRegistrationTemplate.exception.ProductNotFoundException;
-import com.lautbiru.productRegistrationTemplate.model.Product;
-import com.lautbiru.productRegistrationTemplate.wrapper.ProductWrapper;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
+import com.lautbiru.productRegistrationTemplate.exception.DuplicationIdException;
+import com.lautbiru.productRegistrationTemplate.exception.ProductNotFoundException;
+import com.lautbiru.productRegistrationTemplate.model.Product;
+import com.lautbiru.productRegistrationTemplate.wrapper.ProductWrapper;
 
 @RestController
 @RequestMapping(value = "/template")
@@ -59,7 +61,11 @@ public class ProductWebService {
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<ProductWrapper> entity = new HttpEntity<ProductWrapper>(productWrapper, headers);
 
-        return restTemplate.exchange(URL_PREFIX, HttpMethod.POST, entity, String.class);
+        try {
+            return restTemplate.exchange(URL_PREFIX, HttpMethod.POST, entity, String.class);
+        } catch (Exception e) {
+            throw new DuplicationIdException();
+        }
     }
 
     @PutMapping(value = "/products/{id}")

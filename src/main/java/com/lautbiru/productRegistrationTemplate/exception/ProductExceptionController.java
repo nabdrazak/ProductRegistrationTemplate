@@ -11,4 +11,9 @@ public class ProductExceptionController {
     public ResponseEntity<Object> exception(ProductNotFoundException exception) {
         return new ResponseEntity<>("Product Not Found!!", HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = DuplicationIdException.class)
+    public ResponseEntity<Object> exception(DuplicationIdException exception) {
+        return new ResponseEntity<>("Product ID is duplicated!!", HttpStatus.BAD_REQUEST);
+    }
 }
