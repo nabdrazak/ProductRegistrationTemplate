@@ -22,6 +22,11 @@
                         };
                         buttonCell.appendChild(buttonDelete);
 
+                        const updateField = document.createElement('A');
+                        const updateCellTitle = document.createTextNode(" Update ");
+                        passValue(updateField, result[product].id);
+                        updateField.appendChild(updateCellTitle);
+
                         propIndexdCell.textContent = product;
                         propNameCell.textContent = result[product].id;
                         propValueCell.textContent = result[product].name;
@@ -30,11 +35,18 @@
                         row.appendChild(propNameCell);
                         row.appendChild(propValueCell);
                         row.appendChild(buttonCell);
+                        row.appendChild(updateField);
 
                         tableBody.append(row);
                     }
                 });
             });
+
+            function passValue(updateField, id) {
+                var prefix = '/home';
+                updateUrl = prefix+'/display-product/'+id,
+                updateField.setAttribute("href", updateUrl);
+            }
         </script>
 </head>
 
@@ -48,6 +60,7 @@
                     <th>Property</th>
                     <th>Value</th>
                     <th>Delete</th>
+                    <th>Update</th>
                 </tr>
             </thead>
             <tbody id="myTableBody"></tbody>

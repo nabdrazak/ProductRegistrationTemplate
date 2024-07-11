@@ -11,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,6 +98,42 @@ public class WebController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("view-products");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/update-product/{id}/{name}", method = RequestMethod.POST)
+    public String updateProduct(@PathVariable("id") String id, @PathVariable("name") String name, Model model) {
+
+        logger.info("At update product method *****************");
+        logger.info("ID --> "+id+" and Name --> "+name);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+        Product product = new Product();
+        product.setName(name);
+
+        HttpEntity<Product> entity = new HttpEntity<Product>(product, headers);
+        restTemplate.exchange(URL_PREFIX+id, HttpMethod.PUT, entity, String.class);
+
+        logger.info("About to return to view products");
+        return "view-products";
+    }
+
+    @GetMapping("/display-product/{id}")
+    public ModelAndView getProduct(@PathVariable("id") String id, Model model) {
+
+        logger.info("At display product method *****************");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Product> entity = new HttpEntity<Product>(headers);
+        ResponseEntity<Product> exchange = restTemplate.exchange(URL_PREFIX + id, HttpMethod.GET, entity, Product.class);
+        Product product = exchange.getBody();
+        model.addAttribute("product", product);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("update-item");
         return modelAndView;
     }
 }
