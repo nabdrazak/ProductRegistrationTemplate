@@ -14,13 +14,22 @@
                         const propIndexdCell = document.createElement('td');
                         const propNameCell = document.createElement('td');
                         const propValueCell = document.createElement('td');
+                        const buttonCell = document.createElement('td');
+                        const buttonDelete = document.createElement('button');
+                        buttonDelete.textContent = "DELETE";
+                        buttonDelete.onclick = function () {
+                            myDeleteFunction(result[product].id);
+                        };
+                        buttonCell.appendChild(buttonDelete);
 
                         propIndexdCell.textContent = product;
                         propNameCell.textContent = result[product].id;
                         propValueCell.textContent = result[product].name;
+                        row.id = result[product].id;
                         row.appendChild(propIndexdCell);
                         row.appendChild(propNameCell);
                         row.appendChild(propValueCell);
+                        row.appendChild(buttonCell);
 
                         tableBody.append(row);
                     }
@@ -38,11 +47,34 @@
                     <th>Product No</th>
                     <th>Property</th>
                     <th>Value</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody id="myTableBody"></tbody>
         </table>
     </div>
+    <script>
+        function myDeleteFunction(id) {
+            var prefix = '/home';
+            console.log("Location href --> "+location.href);
+<!--          Another example to delete row-->
+<!--            var row = document.getElementById(id);-->
+<!--            row.parentElement.removeChild(row);-->
+
+            $.ajax({
+                type:'DELETE',
+                url:prefix+'/delete-product/'+id,
+                success:function(response) {
+                    console.log(response);
+                    document.open();
+                    document.write(response);
+                    document.close();
+                }
+            });
+        };
+        //javascript function call spring boot rest api
+        //https://www.geeksforgeeks.org/ways-to-make-an-api-call-in-javascript/
+    </script>
     <a href="/home/save-product">Add Item</a>
 </body>
 </html>

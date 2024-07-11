@@ -15,8 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -80,7 +82,21 @@ public class WebController {
 
             return "add-item";
         }
-
         return "view-products";
+    }
+
+    @RequestMapping(value = "/delete-product/{id}", method = RequestMethod.DELETE)
+    public ModelAndView deleteProduct(@PathVariable("id") String id, Model model) {
+        logger.info("PASS ID VALUE --------->  "+id);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+        HttpEntity<Object> entity = new HttpEntity<Object>(headers);
+        restTemplate.exchange(URL_PREFIX+id, HttpMethod.DELETE, entity, String.class);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("view-products");
+        return modelAndView;
     }
 }
