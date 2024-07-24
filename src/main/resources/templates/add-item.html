@@ -20,11 +20,11 @@
                 <table style="width: 80%;" border="1px solid black">
                     <tr>
                         <td>ID</td>
-                        <td><input type="text" th:field="*{id}" name="productId"></td>
+                        <td><input type="text" th:field="*{id}" name="productId" required></td>
                     </tr>
                     <tr>
                         <td>Product Name</td>
-                        <td><input type="text" th:field="*{name}" name="productName"></td>
+                        <td><input type="text" th:field="*{name}" name="productName" required></td>
                     </tr>
                 </table>
                 <button type="submit">Add</button>

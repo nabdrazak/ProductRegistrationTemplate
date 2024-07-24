@@ -31,6 +31,10 @@
             var name = document.getElementById("productName").value;
             console.log("id -> "+id+" name -> "+name);
 
+            if(name == 'undefined' || name == '' || name == null) {
+                document.getElementById("displayAnyMessage").innerHTML="Product Name is Mandatory";
+                return false;
+            }
             var prefix = '/home';
 
             $.ajax({
